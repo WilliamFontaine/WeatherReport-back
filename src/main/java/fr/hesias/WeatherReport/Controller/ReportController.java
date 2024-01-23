@@ -29,6 +29,12 @@ public class ReportController {
         if (radius > 100) {
             return ResponseEntity.badRequest().body("Radius must be less than 100km");
         }
+        if (latitude.compareTo(new BigDecimal("90")) > 0 || latitude.compareTo(new BigDecimal("-90")) < 0) {
+            return ResponseEntity.badRequest().body("Latitude must be between -90 and 90");
+        }
+        if (longitude.compareTo(new BigDecimal("180")) > 0 || longitude.compareTo(new BigDecimal("-180")) < 0) {
+            return ResponseEntity.badRequest().body("Longitude must be between -180 and 180");
+        }
 
         Pageable pageable = PageRequest.of(page, size);
         Page<ReportDto> reportDtoList = reportService.findInRadius(latitude, longitude, radius, pageable);
