@@ -1,21 +1,20 @@
 package fr.hesias.WeatherReport.Repository;
 
-import fr.hesias.WeatherReport.Dto.ReportDto;
 import fr.hesias.WeatherReport.Model.Report;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public interface ReportRepository extends JpaRepository<Report, UUID> {
 
-
-    @Query(value = "SELECT * FROM report WHERE report_date > NOW() - INTERVAL '1 DAY'", nativeQuery = true)
-    List<ReportDto> findLastDay();
-
-    @Query(value = "SELECT * FROM Report r WHERE " +
-            "(6371 * acos(cos(?1/(180/ACOS(-1))) * cos(r.latitude/(180/ACOS(-1))) * cos(r.longitude/(180/ACOS(-1)) - ?2/(180/ACOS(-1))) + sin(?1/(180/ACOS(-1))) * sin(r.latitude/(180/ACOS(-1))))) <= ?3 " +
-            "AND report_date > NOW() - INTERVAL '1 DAY'", nativeQuery = true)
-    List<ReportDto> findInRadius(double lat, double lon, double radius);
+    @Query(value = "SELECT * FROM report r " +
+            "WHERE created_at > NOW() - INTERVAL '1 day' " +
+            "AND 6371 * acos(cos(radians(?1)) * cos(radians(r.latitude)) * cos(radians(r.longitude) - radians(?2)) + sin(radians(?1)) * sin(radians(r.latitude))) < ?3 " +
+            "ORDER BY 6371 * acos(cos(radians(?1)) * cos(radians(r.latitude)) * cos(radians(r.longitude) - radians(?2)) + sin(radians(?1)) * sin(radians(r.latitude))), created_at DESC ",
+            nativeQuery = true)
+    Page<Report> findInRadius(BigDecimal latitude, BigDecimal longitude, Integer radius, Pageable pageable);
 }

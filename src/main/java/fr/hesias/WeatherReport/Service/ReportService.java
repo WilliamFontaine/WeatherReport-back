@@ -4,8 +4,11 @@ import fr.hesias.WeatherReport.Dto.ReportDto;
 import fr.hesias.WeatherReport.Mapper.ReportMapper;
 import fr.hesias.WeatherReport.Model.Report;
 import fr.hesias.WeatherReport.Repository.ReportRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -21,7 +24,8 @@ public class ReportService extends BaseService<Report, ReportDto> {
         this.mapper = mapper;
     }
 
-    public List<ReportDto> findInRadius(double lat, double lon, double radius) {
-        return repository.findInRadius(lat, lon, radius);
+    public Page<ReportDto> findInRadius(BigDecimal latitude, BigDecimal longitude, Integer radius, Pageable pageable) {
+        Page<Report> reportList = repository.findInRadius(latitude, longitude, radius, pageable);
+        return reportList.map(mapper::entityToDto);
     }
 }

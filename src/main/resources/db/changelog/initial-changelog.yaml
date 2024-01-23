@@ -1,38 +1,43 @@
 databaseChangeLog:
   - changeSet:
-      id: 1706021009629-1
-      author: william
+      id: 1706028308094-1
+      author: willi (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
         - createTable:
-            tableName: report
             columns:
               - column:
-                  name: id
-                  type: UUID
                   constraints:
                     nullable: false
                     primaryKey: true
                     primaryKeyName: pk_report
+                  name: id
+                  type: UUID
               - column:
-                  name: report_date
-                  type: DATETIME
-              - column:
+                  constraints:
+                    nullable: false
                   name: latitude
-                  type: FLOAT
+                  type: NUMERIC(9, 6)
+              - column:
                   constraints:
                     nullable: false
-              - column:
                   name: longitude
-                  type: FLOAT
+                  type: NUMERIC(9, 6)
+              - column:
                   constraints:
                     nullable: false
-              - column:
                   name: weather_type
                   type: VARCHAR(255)
-                  constraints:
-                    nullable: false
               - column:
-                  name: temperature
-                  type: FLOAT
                   constraints:
                     nullable: false
+                  name: temperature
+                  type: NUMERIC(5, 2)
+              - column:
+                  name: created_at
+                  type: DATETIME
+              - column:
+                  name: updated_at
+                  type: DATETIME
+            tableName: report
+
